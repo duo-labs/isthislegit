@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block head %}
+{{ super() }} 
+{% endblock %}
+{% block page_title %}
+<div class="title_left">
+    <h3>Report Details</h3>
+</div>
+{% endblock %}
+{% block content %}
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Report - "{{report.subject | safe}}"</h2>
+                <div class="clearfix"></div>
+                <small>Reported on <span data-type="datetime">{{report.date_reported}}</span></small>
+                <div class="clearfix"></div>
+                <br>
+                <button class="btn btn-sm btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">
+                    <i class="fa fa-reply"></i> Reply
+                </button>
+                <div class="dropdown dropdown-inline" id="status-dropdown">
+                    <button id="report-status-btn" class="btn btn-sm dropdown-toggle btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Status: <span id="report-status">{{report.status}}</span> <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        {% for status in ['Pending', 'Benign', 'Malicious'] %}
+                            <li><a href="#">{{status}}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="x_content">
+                <div class="col-sm-3 report_column">
+                    <h4 class="text-center">Similar Reports</h4>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            Coming Soon!
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-9">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Overview</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#headers" aria-controls="text" role="tab" data-toggle="tab">Headers</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#text" aria-controls="text" role="tab" data-toggle="tab">Text</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#html" aria-controls="html" role="tab" data-toggle="tab">HTML</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="overview">
+                            <div class="clearfix"></div>
+                            <h2>Summary</h2>
+                            <p>Reported by: {{ report.reported_by }}</p>
+                            <p>Reported on: <span data-type="datetime">{{ report.date_reported }}</span></p>
+                            <p>Status: {{ report.status }}</p>
+                            <div class="clearfix"></div>
+                            <h2>Timeline</h2>
+                            <div class="timeline">
+                            {% for event in events %}
+                                <div class="timeline-entry">
+                                    <div class="timeline-bar"></div>
+                                    <div class="timeline-icon"></div>
+                                    <div class="timeline-message">{{event.message}}
+                                        <span class="timeline-date" data-type="datetime">{{event.date_created}}</span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="headers">
+                            <div class="clearfix"></div>
+                            {% if report.headers %}
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td>Key</td>
+                                        <td>Value</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for header in report.headers %}
+                                    <tr>
+                                        <td>{{header.name}}</td>
+                                        <td>{{header.value}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% endif %}
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="text">
+                            <div class="clearfix"></div>
+                            {{report.text}}
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="html">
+                            <div class="clearfix"></div>
+                            <div id="html_preview"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+{% endblock %}
+{% block modals %}
+<div class="modal bs-example-modal-lg" id="reply_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+                <div id="modal_flash" style="display:none;" class="alert"></div>
+                <h4 class="modal-title" id="myModalLabel">Send Email Reply</h4>
+            </div>
+            <form id="reply_form" name="reply_form" class="form-horizontal form-label-left">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12" for="from">From: <span class="required">*</span>
+                        </label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" name="from" id="from" required="required" class="form-control" value="{{g.user.email()}}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12" for="to">To: <span class="required">*</span>
+                        </label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" name="to" id="to" required="required" class="form-control" value="{{report.reported_by}}" readonly>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12" for="subject">Subject: <span class="required">*</span>
+                        </label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" name="subject" id="subject" required="required" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2 col-sm-2 col-xs-12" for="text">Text: <span class="required">*</span>
+                        </label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <textarea rows="10" name="text" id="text" required="required" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-success" value="Send Reply">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/app/report.min.js') }}"></script>
+<script>
+html_preview({{report.html | tojson| safe}})
+</script>
+{% endblock %}

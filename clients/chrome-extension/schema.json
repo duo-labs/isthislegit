@@ -1,0 +1,28 @@
+{
+    "type": "object",
+    "properties": {
+        "server": {
+            "title": "IsThisLegit dashboard URL",
+            "description": "The IsThisLegit dashboard URL to send reports to.",
+            "type": "string"
+        },
+        "domains": {
+            "title": "Valid email domains to use with IsThisLegit",
+            "description": "Restricts the extension to only these email address domains (to prevent the extension from being shown in non-managed email accounts).",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "forwardAddress": {
+            "title": "Email address to forward reports to",
+            "description": "Forward reports to this address",
+            "type": "string"
+        },
+        "deleteOnReport": {
+            "title": "Move email to trash after reporting",
+            "description": "Automatically moves the email to the trash after the users reports it",
+            "type": "boolean"
+        }
+    }
+}

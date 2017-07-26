@@ -1,0 +1,15 @@
+[search]
+provider = "gae"
+
+[email]
+provider = "gae"
+
+[worker]
+provider = "gae"
+
+[webhook]
+provider = "gae"
+urls = []
+
+[storage]
+provider = "gae"

@@ -1,0 +1,14 @@
+{
+    "server": {
+        "Value": ""
+    },
+    "domains": {
+        "Value": []
+    },
+    "forwardAddress": {
+        "Value": ""
+    },
+    "deleteOnReport": {
+        "Value": true
+    }
+}

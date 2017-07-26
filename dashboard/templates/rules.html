@@ -1,0 +1,99 @@
+{% extends "base.html" %} {% block title %}Rules{% endblock %} {% block head %} {{ super() }} {% endblock %} {% block content
+%}
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>All Rules</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <button class="btn btn-success" id="new_rule_btn"><i class="fa fa-plus"></i> New Rule</button>
+                <div class="clearfix"></div>
+                <br> {% if rules | length > 0 %}
+                <table id="rules-datatable" class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="col-md-1">ID</th>
+                            <th class="col-md-3">Rule Name</th>
+                            <th class="col-md-2">Modified Date</th>
+                            <th class="col-md-1">Created By</th>
+                            <th class="col-md-2"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rule in rules %}
+                        <tr>
+                            <td>{{rule.key.id()}}</td>
+                            <td>{{rule.name}}</td>
+                            <td>{{rule.date_updated}}</td>
+                            <td>{{rule.created_by}}</td>
+                            <td>
+                                <button class="btn btn-success edit_btn" onclick='edit({{rule.key.id()}});'>Edit</button>
+                                <button class="btn btn-danger delete_btn" onclick='deleteRule({{rule.key.id()}});'>Delete</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="alert alert-info">No rules found</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} {% block modals %}
+<div class="modal bs-example-modal-lg" id="rule_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+                <div id="modal_flash" style="display:none;" class="alert"></div>
+                <h4 class="modal-title" id="myModalLabel">Manage Rule</h4>
+            </div>
+            <form id="rule_form" name="rule_form" class="form-horizontal form-label-left">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                            <div class="col-md-12 col-sm-8 col-xs-12">
+                                <input type="text" name="name" id="name" placeholder="Rule Name" required="required" class="form-control input-lg" autofocus>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <h2>Conditions</h2>
+                        <span>If all of the following conditions match:</span>
+                    </div>
+                    <div id="rule_conditions"></div>
+                    <button id="add_condition" class="btn btn-primary" type="button"><i class="fa fa-plus"></i> Add Condition</button>
+                    <hr>
+                    <div class="form-group">
+                        <h2>Actions</h2>
+                        <span>Perform these actions:</span>
+                    </div>
+                    <div id="rule_actions"></div>
+                    <button id="add_action" class="btn btn-primary" tpe="button"><i class="fa fa-plus"></i> Add Action</button>
+                    <hr>
+                    <div class="form-group">
+                        <div class="pretty primary curvy">
+                            <input type="checkbox" name="active" checked/>
+                            <label><h2><i class="fa fa-check"></i> Rule Activated</h2></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-success" value="Save">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} {% block scripts %}
+<script src="{{ url_for('static', filename='js/app/rules.min.js') }}"></script>
+{% endblock %}

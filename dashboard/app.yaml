@@ -1,0 +1,40 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+
+builtins:
+- deferred: on
+
+handlers:
+- url: /static
+  static_dir: static/dist
+  secure: always
+
+- url: /_ah/queue/deferred
+  script: google.appengine.ext.deferred.deferred.application
+  login: admin
+  secure: always
+
+- url: "/report/"
+  script: isthislegit.app
+  secure: always
+
+- url: "/.*"
+  script: isthislegit.app
+  login: admin
+  secure: always
+
+libraries:
+- name: jinja2
+  version: latest
+- name: markupsafe
+  version: latest
+
+skip_files:
+- ^(.*/)?#.*#$
+- ^(.*/)?.*~$
+- ^(.*/)?.*\.py[co]$
+- ^(.*/)?.*/RCS/.*$
+- ^(.*/)?\..*$
+- ^node_modules/.*$
+- ^bower_components/.*$

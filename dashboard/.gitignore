@@ -1,0 +1,29 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Third-party libraries
+lib
+
+# C extensions
+*.so
+
+# Node modules
+node_modules
+bower_components
+
+# Sass Cache
+.sass-cache
+
+# Auto-generated index files
+index.yaml
+
+# Swap files
+*.swp
+
+# VirtualEnv
+.env
+
+# Service account keys
+service_account_key.json

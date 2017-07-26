@@ -1,0 +1,38 @@
+{% extends "base.html" %}     
+{% block title %}Reports{% endblock %}
+{% block head %}
+{{ super() }} 
+{% endblock %}
+{% block content %}
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>All Reports</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <button class="btn btn-primary" disabled>Quick Reply</button>
+                <div class="clearfix"></div>
+                <br>
+                <table id="reports-datatable" class="table table-striped table-bordered">
+                    <thead>
+                        <th>Report ID</th>
+                        <th>Report Date</th>
+                        <th>Reported By</th>
+                        <th>Type</th>
+                        <th>Subject or URL</th>
+                        <th>Status</th>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/app/reports.min.js') }}"></script>
+{% endblock %}

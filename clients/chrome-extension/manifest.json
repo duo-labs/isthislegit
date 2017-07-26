@@ -1,0 +1,42 @@
+{
+    "background": {
+        "persistent": false,
+        "scripts": [
+            "dist/js/lib/base64.js",
+            "dist/js/lib/mime-js.js",
+            "dist/js/service.js"
+        ]
+    },
+    "content_scripts": [
+        {
+            "css": [
+                "dist/css/main.css"
+            ],
+            "js": [
+                "dist/js/vendor.js",
+                "dist/js/lib/inboxjs.js",
+                "dist/js/app.js"
+            ],
+            "matches": [
+                "https://mail.google.com/*"
+            ]
+        }
+    ],
+    "default_locale": "en",
+    "description": "Report phishing emails to an administrator.",
+    "icons": {
+        "128": "icons/icon128.png",
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png"
+    },
+    "manifest_version": 2,
+    "name": "IsThisLegit",
+    "version": "0.1.0",
+    "permissions": [
+        "storage",
+        "identity"
+    ],
+    "storage": {
+        "managed_schema": "schema.json"
+    }
+}

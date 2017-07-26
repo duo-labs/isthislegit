@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% block head %}
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% block title %}IsThisLegit{% endblock %}</title>
+
+    <!-- Custom Theme Style -->
+    <link href="{{ url_for('static', filename='css/vendor.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/select2-bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/custom.min.css') }}" rel="stylesheet"> {% endblock %}
+</head>
+
+<body class="nav-md">
+    <div class="container body">
+        <div class="main_container">
+            <div class="col-md-3 left_col">
+                <div class="left_col scroll-view">
+                    <div class="navbar nav_title" style="border: 0;">
+                        <a href="{{ url_for('app_blueprint.index') }}" class="site_title"><img src="{{ url_for('static', filename='img/logo.svg') }}" width="100%"/></a>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <br />
+
+                    <!-- sidebar menu -->
+                    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                        <div class="menu_section">
+                            <h3>General</h3>
+                            <ul class="nav side-menu">
+                                <li><a href="{{ url_for('app_blueprint.index') }}"><i class="fa fa-area-chart"></i> Dashboard </a></li>
+                                <li><a href="{{ url_for('app_blueprint.reports') }}"><i class="fa fa-list"></i> Reports <span class="badge pull-right">{{g.stats.pending}}</span></a></li>
+                                <li><a href="{{ url_for('app_blueprint.templates') }}"><i class="fa fa-envelope-o"></i> Response Templates </a></li>
+                                <li><a href="{{ url_for('app_blueprint.rules') }}"><i class="fa fa-edit"></i> Rules </span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /sidebar menu -->
+                </div>
+            </div>
+
+            <!-- top navigation -->
+            <div class="top_nav">
+                <div class="nav_menu">
+                    <nav>
+                        <div class="nav toggle">
+                            <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                        </div>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a href="{{ url_for('app_blueprint.logout') }}">
+                                <span>{{g.user.email()}}</span>
+                                </a>
+                            </li>
+                        </ul>
+                        </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <!-- /top navigation -->
+            <div class="right_col" role="main">
+                <div class="page-title">
+                    {% block page_title %}
+                    <div class="title_left">
+                        <h3>{{title}}</h3>
+                    </div>
+                    {% endblock %}
+
+                    <div class="title_right">
+                        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                            <form id="search_form" action="/search" method="POST">
+                                <div class="input-group">
+                                    <input type="text" name="query" class="form-control" placeholder="Search for...">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                                    <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-default" type="button">Go!</button>
+                                </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- page content -->
+                {% block content %}{% endblock %}
+                <!-- /page content -->
+            </div>
+
+            <!-- footer content -->
+            <footer>
+                <div class="pull-right">
+                    IsThisLegit - a project by <a href="https://duo.com/labs">Duo Labs</a>
+                </div>
+                <div class="clearfix"></div>
+            </footer>
+            <!-- /footer content -->
+        </div>
+    </div>
+    <!-- page modals -->
+    {% block modals %}{% endblock %}
+    <!-- /page modals -->
+
+    <!-- Vendor scripts -->
+    <script src="{{ url_for('static', filename='js/vendor.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/vendor/gentelella.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/vendor/datatables-moment.min.js') }}"></script>
+    <!-- /Vendor scripts -->
+    <!-- CSRF Token for AJAX Requests -->
+    <script type="text/javascript">
+        var csrf_token = "{{ csrf_token() }}";
+    </script>
+    <!-- Custom scripts -->
+    <script src="{{ url_for('static', filename='js/app/strings.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app/app.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app/api.min.js') }}"></script>
+
+    <!-- Page specific scripts -->
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

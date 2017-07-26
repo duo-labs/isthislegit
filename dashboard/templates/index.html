@@ -1,0 +1,122 @@
+{% extends "base.html" %}     
+{% block title %}Dashboard{% endblock %}
+{% block head %}
+{{ super() }} 
+{% endblock %}
+{% block content %}
+    <div class="clearfix"></div>
+    <div class="row tile_count">
+        <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+            <span class="count_top"><i class="fa fa-user"></i> Total Reports</span>
+            <div class="count">{{g.stats.total}}</div>
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+            <span class="count_top"><i class="fa fa-clock-o"></i> Average Response Time</span>
+            <div class="count">{{average_response_time}}</div>
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+            <span class="count_top"><i class="fa fa-bug"></i> Total Malicious</span>
+            <div class="count red">{{g.stats.malicious}}</div>
+        </div>
+    </div>
+    <div class="">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Reports Seen in the Last 30 Days</h2>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <div id="timeline_chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <div class="x_panel stat-widget">
+                    <div class="x_title">
+                        <h2>Status Breakdown</h2>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <div id="stats_chart"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <div class="x_panel stat-widget">
+                    <div class="x_title">
+                        <h2>Top Reporters</h2>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        {% if top_reporters | length > 0 %}
+                        <table id="reporters-datatable" class="table table-striped table-bordered">
+                            <thead>
+                                <th>Reporter</th>
+                                <th>Number of Reports</th>
+                            </thead>
+                            <tbody>
+                                {% for record in top_reporters %}
+                                <tr>
+                                    <td>{{record['reporter']}}</td>
+                                    <td>{{record['count']}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <div class="alert alert-info">No reports found</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Recent Reports</h2>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        {% if reports | length > 0 %}
+                        <table id="reports-datatable" class="table table-striped table-bordered">
+                            <thead>
+                                <th>Report ID</th>
+                                <th>Report Date</th>
+                                <th>Reported By</th>
+                                <th>Type</th>
+                                <th>Subject or URL</th>
+                        		<th>Status</th>
+                            </thead>
+                            <tbody>
+                                {% for report in reports %}
+                                <tr>
+                                    <td>{{report.key.id()}}</td>
+                                    <td>{{report.date_reported}}</td>
+                                    <td>{{report.reported_by}}</td>
+                                    <td>{{report.report_type}}</td>
+                                    <td>{{report.subject}}</td>
+									<td>{{report.status}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <div class="alert alert-info">No reports found</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/app/index.min.js')}}"></script>
+{% endblock %}
