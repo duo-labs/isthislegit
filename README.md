@@ -18,4 +18,4 @@ Find a bug? Want more features? Find something missing in the documentation? Let
 <img src="https://i.imgur.com/rj9AcNQ.png" width="400">
 </p>
 
-_IsThisLegit was release as part of [BlackHat USA 2017 Arsenal](https://www.blackhat.com/us-17/arsenal.html#isthislegit)_
+_IsThisLegit was released as part of [BlackHat USA 2017 Arsenal](https://www.blackhat.com/us-17/arsenal.html#isthislegit)_
