@@ -2,6 +2,8 @@
 
 IsThisLegit is a dashboard and Chrome extension that makes it easy to receive, analyze, and respond to phishing reports.
 
+**Current Status 07/26/2017 - This is the initial release of IsThisLegit. While we think it's awesome, we recommend treating it like an alpha release. So please take it for a spin, but know that there are almost certainly bugs to be found/fixed.**
+
 ### Documentation
 
 Documentation can be found on our [wiki](https://github.com/duo-labs/isthislegit/wiki). Find something missing? Let us know by filing an issue!
