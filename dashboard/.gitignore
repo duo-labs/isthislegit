@@ -16,9 +16,6 @@ bower_components
 # Sass Cache
 .sass-cache
 
-# Auto-generated index files
-index.yaml
-
 # Swap files
 *.swp
 
