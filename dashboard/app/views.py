@@ -88,6 +88,7 @@ def templates():
             name=form.name.data,
             text=form.text.data,
             subject=form.subject.data,
+            sender=g.user.email(),
             owner_domain=g.domain,
             created_by=g.user.email())
         template.put()

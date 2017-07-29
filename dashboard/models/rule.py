@@ -1,6 +1,7 @@
 from google.appengine.ext import ndb
 
 import json
+import re
 
 from models.util import DateTimeProperty
 from models.email import EmailReport
@@ -57,7 +58,7 @@ class RuleCondition(ndb.Model):
             if self.value != "":
                 if self._text_match(self.matches, report.text, self.value):
                     matches = True
-                if self_text_match(self.matches, report.html, self.value):
+                if self.text_match(self.matches, report.html, self.value):
                     matches = True
         return matches
 
@@ -113,7 +114,7 @@ class Rule(ndb.Model):
         required_props = ['name']
         for prop in required_props:
             if not data.get(prop):
-                raise RuleValidationError(
+                raise RuleValidationException(
                     'Missing required field {}'.format(prop))
         '''
         for condition in data.get('conditions'):
