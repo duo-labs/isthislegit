@@ -2,6 +2,7 @@ from google.appengine.ext import ndb
 
 from models.util import DateTimeProperty
 
+
 class Template(ndb.Model):
     """
     Template - represents an email Template used to respond to Email Reports
@@ -23,4 +24,4 @@ class Template(ndb.Model):
     @classmethod
     def get_by_name(cls, base_query, name):
         """ Returns the template that matches the given name."""
-        return base_query.query(cls.name == name).get()
+        return base_query.filter(cls.name == name).get()

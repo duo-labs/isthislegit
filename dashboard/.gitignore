@@ -24,3 +24,6 @@ bower_components
 
 # Service account keys
 service_account_key.json
+
+# Local copy of toml file
+isthislegit.toml

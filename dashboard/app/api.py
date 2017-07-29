@@ -1,4 +1,4 @@
-from flask import Blueprint, g, request, jsonify, Response, abort, current_app
+from flask import Blueprint, g, request, jsonify, Response, abort, current_app, render_template_string
 from datetime import datetime
 from flanker.addresslib import address
 
@@ -142,22 +142,28 @@ def report_reply(report_id):
     if not response:
         return json_error(400, 'Invalid JSON', {})
 
+    response.responder = sender_address
+
     try:
         response_key = response.put()
         report.responses.append(response_key)
         if not report.date_responded:
             report.date_responded = datetime.now()
 
-        event_key = EventReportResponded(response=response).put()
+        event_key = EventReportResponded(
+            response=response, report=report).put()
         report.events.append(event_key)
 
         report.put()
 
+        subject = render_template_string(response.subject, report=report)
+        body = render_template_string(response.content, report=report)
+
         email_provider.send(
             to=report.reported_by,
             sender=g.user.email(),
-            subject=response.subject,
-            body=response.content)
+            subject=subject,
+            body=body)
     except Exception as e:
         return json_error(400, str(e), {})
 

@@ -1,12 +1,15 @@
-from actions.action import BaseAction
+from flask import render_template_string
 from datetime import datetime
 
-from models.email import EmailReport
+from actions.action import BaseAction
+from models import ISTHISLEGIT_SVC
+from models.email import EmailResponse
+from models.event import EventReportResponded
 from models.template import Template
 from services.email import email_provider
 
 
-def getTemplates(**kwargs):
+def get_templates(**kwargs):
     """ Gets the list of templates that are accessible to our current user. """
     templates = Template.domain_query(kwargs.get('domain')).fetch()
     return [template.name for template in templates]
@@ -23,7 +26,7 @@ class SendTemplateAction(BaseAction):
     options = {
         "template_name": {
             "name": "Template Name",
-            "choiceFunc": getTemplates
+            "choiceFunc": get_templates
         }
     }
 
@@ -36,20 +39,29 @@ class SendTemplateAction(BaseAction):
         if not template:
             return
 
-        response = EmailReponse(
+        response = EmailResponse(
+            responder=ISTHISLEGIT_SVC,
             sender=template.sender,
             content=template.text,
             subject=template.subject)
         try:
             response_key = response.put()
             report.responses.append(response_key)
-            if not report_date_responded:
+            if not report.date_responded:
                 report.date_responded = datetime.now()
+
+            event_key = EventReportResponded(
+                response=response, report=report).put()
+            report.events.append(event_key)
+            report.put()
+
+            subject = render_template_string(response.subject, report=report)
+            body = render_template_string(response.content, report=report)
 
             email_provider.send(
                 to=report.reported_by,
-                sender=g.user.email(),
-                subject=response.subject,
-                body=response.content)
+                sender=response.sender,
+                subject=subject,
+                body=body)
         except Exception as e:
             return
