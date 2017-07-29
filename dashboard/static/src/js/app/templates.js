@@ -7,17 +7,17 @@ const modalFlash = (text, cls) => {
 
 const edit = (id) => {
     $("#template_modal").modal('show');
-	if (id != -1) {
-		$api.get_template(id)
-		.success((template) => {
-			$("#name").val(template.name);
-			$("#subject").val(template.subject);
-			$("#text").text(template.text);
-		})
-        .error((response) => {
-            modalFlash(response.responseJSON.error, 'alert-danger')
-        });
-	}
+    if (id != -1) {
+        $api.get_template(id)
+            .success((template) => {
+                $("#name").val(template.name);
+                $("#subject").val(template.subject);
+                $("#text").val(template.text);
+            })
+            .error((response) => {
+                modalFlash(response.responseJSON.error, 'alert-danger')
+            });
+    }
 }
 
 const deleteTemplate = (id) => {
@@ -34,12 +34,12 @@ const deleteTemplate = (id) => {
         preConfirm: function () {
             return new Promise(function (resolve, reject) {
                 $api.delete_template(id)
-                .success((response) => {
-                    resolve()
-                })
-                .error((response) => {
-                    reject(response.responseJSON.error)
-                })
+                    .success((response) => {
+                        resolve()
+                    })
+                    .error((response) => {
+                        reject(response.responseJSON.error)
+                    })
             })
         }
     }).then(function () {
@@ -52,7 +52,7 @@ const deleteTemplate = (id) => {
     })
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     // TODO: Make this a proper regex..
     const report_id = location.pathname.split('/').pop();
     $("#template_form").submit((e) => {
@@ -68,29 +68,29 @@ $(document).ready(function() {
                 $("#modal_flash").hide();
                 $("#template_modal").modal('hide');
             })
-        .error((response) => {
-            modalFlash(response.responseJSON.error, "alert-danger");
-        });
+            .error((response) => {
+                modalFlash(response.responseJSON.error, "alert-danger");
+            });
         e.preventDefault();
     });
 
     // Reset the modal after dismiss
-    $('.modal').on('hidden.bs.modal', function(){
+    $('.modal').on('hidden.bs.modal', function () {
         $(this).find('form')[0].reset();
         $(this).find('textarea').val("");
     });
 
-	$('#new_template_btn').click(()=>{edit(-1)});
+    $('#new_template_btn').click(() => { edit(-1) });
 
     $("#templates-datatable").DataTable({
-		order: [[ 1, "desc" ]],
-		columnDefs: [
-		{
-			"render": function(data, type, row){
-				return moment.utc(data).local().format('MMMM Do YYYY, h:mm:ss a')
-			},
-			"targets": 2
-		}
-		]
-	});
+        order: [[1, "desc"]],
+        columnDefs: [
+            {
+                "render": function (data, type, row) {
+                    return moment.utc(data).local().format('MMMM Do YYYY, h:mm:ss a')
+                },
+                "targets": 2
+            }
+        ]
+    });
 })

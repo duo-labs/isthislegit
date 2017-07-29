@@ -28,9 +28,7 @@ class Event(ndb.Model):
             future - The async future operation
         """
         future.check_success()
-        for url in config['webhook']['urls']:
-            worker_provider.add_task(
-                webhook_provider.send, payload=self.to_dict())
+        worker_provider.add_task(webhook_provider.send, payload=self.to_dict())
 
 
 def EventReportCreated(*args, **kwargs):
