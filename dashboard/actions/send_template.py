@@ -39,11 +39,14 @@ class SendTemplateAction(BaseAction):
         if not template:
             return
 
+        subject = render_template_string(template.subject, report=report)
+        body = render_template_string(template.text, report=report)
+
         response = EmailResponse(
             responder=ISTHISLEGIT_SVC,
             sender=template.sender,
-            content=template.text,
-            subject=template.subject)
+            content=body,
+            subject=subject)
         try:
             response_key = response.put()
             report.responses.append(response_key)
@@ -54,9 +57,6 @@ class SendTemplateAction(BaseAction):
                 response=response, report=report).put()
             report.events.append(event_key)
             report.put()
-
-            subject = render_template_string(response.subject, report=report)
-            body = render_template_string(response.content, report=report)
 
             email_provider.send(
                 to=report.reported_by,
