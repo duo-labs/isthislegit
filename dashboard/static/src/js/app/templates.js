@@ -1,10 +1,42 @@
 "use strict";
 const $api = new API();
 
+/**
+ * Flashes a modal message
+ * @param {string} The flash message
+ * @param {string} The CSS alert class
+ */
 const modalFlash = (text, cls) => {
     $("#modal_flash").addClass(cls).text(text).show();
 }
 
+const save = (id) => {
+    let url = "/templates"
+    let text = "The template was created successfully"
+    if (id != -1) {
+        url += "/" + id.toString()
+        text = "The template was updated successfully"
+    }
+    $.post(url, $("#template_form").serialize())
+        .success((response) => {
+            new PNotify({
+                title: 'Template Created',
+                text: text,
+                type: 'success',
+                styling: 'bootstrap3'
+            });
+            $("#modal_flash").hide();
+            $("#template_modal").modal('hide');
+        })
+        .error((response) => {
+            modalFlash(response.responseJSON.error, "alert-danger");
+        });
+}
+
+/**
+ * Opens and sets up the template modal
+ * @param {int} The template ID
+ */
 const edit = (id) => {
     $("#template_modal").modal('show');
     if (id != -1) {
@@ -18,8 +50,17 @@ const edit = (id) => {
                 modalFlash(response.responseJSON.error, 'alert-danger')
             });
     }
+    $("#template_form").off("submit")
+    $("#template_form").submit((e) => {
+        e.preventDefault();
+        save(id)
+    });
 }
 
+/**
+ * Deletes a template
+ * @param {string} id - The template ID to delete
+ */
 const deleteTemplate = (id) => {
     swal({
         title: 'Are you sure?',
@@ -55,24 +96,6 @@ const deleteTemplate = (id) => {
 $(document).ready(function () {
     // TODO: Make this a proper regex..
     const report_id = location.pathname.split('/').pop();
-    $("#template_form").submit((e) => {
-        // Submit the form via the API
-        $.post("/templates", $("#template_form").serialize())
-            .success((response) => {
-                new PNotify({
-                    title: 'Template Created',
-                    text: 'The template was created successfully.',
-                    type: 'success',
-                    styling: 'bootstrap3'
-                });
-                $("#modal_flash").hide();
-                $("#template_modal").modal('hide');
-            })
-            .error((response) => {
-                modalFlash(response.responseJSON.error, "alert-danger");
-            });
-        e.preventDefault();
-    });
 
     // Reset the modal after dismiss
     $('.modal').on('hidden.bs.modal', function () {

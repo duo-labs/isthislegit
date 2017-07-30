@@ -96,6 +96,29 @@ def templates():
     return json_error(400, list_errors(form), {})
 
 
+@app_blueprint.route('/templates/<int:template_id>', methods=['POST'])
+def edit_template(template_id):
+    '''
+    Edits an existing template.
+
+    Args:
+    template_id - int - The ID of the template to edit
+    '''
+    template = Template.get_by_id(template_id)
+    if not template or template.owner_domain != g.domain:
+        abort(404)
+
+    form = TemplateForm(request.form, domain=g.domain, template_id=template_id)
+    if form.validate_on_submit():
+        template.name = form.name.data
+        template.text = form.text.data
+        template.subject = form.subject.data
+        template.sender = g.user.email()
+        template.put()
+        return jsonify(template.to_dict())
+    return json_error(400, list_errors(form), {})
+
+
 @app_blueprint.route('/templates/<int:template_id>/delete', methods=["POST"])
 def delete_template(template_id):
     template = Template.get_by_id(template_id)

@@ -143,6 +143,8 @@ def report_reply(report_id):
         return json_error(400, 'Invalid JSON', {})
 
     response.responder = sender_address
+    response.subject = render_template_string(response.subject, report=report)
+    response.content = render_template_string(response.content, report=report)
 
     try:
         response_key = response.put()
@@ -156,14 +158,11 @@ def report_reply(report_id):
 
         report.put()
 
-        subject = render_template_string(response.subject, report=report)
-        body = render_template_string(response.content, report=report)
-
         email_provider.send(
             to=report.reported_by,
             sender=g.user.email(),
-            subject=subject,
-            body=body)
+            subject=response.subject,
+            body=response.content)
     except Exception as e:
         return json_error(400, str(e), {})
 
