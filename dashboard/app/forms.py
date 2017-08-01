@@ -38,6 +38,13 @@ class TemplateForm(Form):
         return True
 
 
+class SendTestTemplateForm(Form):
+    ''' Form to send a test template '''
+    subject = StringField('Subject')
+    text = StringField('Message')
+    recipient = StringField('Recipient', validators=[DataRequired()])
+
+
 class SearchForm(Form):
     ''' Search form '''
 

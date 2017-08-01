@@ -10,6 +10,10 @@ const modalFlash = (text, cls) => {
     $("#modal_flash").addClass(cls).text(text).show();
 }
 
+/**
+ * 
+ * @param {int} id - The template ID
+ */
 const save = (id) => {
     let url = "/templates"
     let text = "The template was created successfully"
@@ -35,7 +39,7 @@ const save = (id) => {
 
 /**
  * Opens and sets up the template modal
- * @param {int} The template ID
+ * @param {int} id - The template ID
  */
 const edit = (id) => {
     $("#template_modal").modal('show');
@@ -55,6 +59,26 @@ const edit = (id) => {
         e.preventDefault();
         save(id)
     });
+}
+
+/**
+ * Sends a test template to the provided address
+ * @param {event} e - The form submit event
+ */
+const sendTestTemplate = (e) => {
+    let url = "/templates/send_test"
+    $.post(url, $("#template_form, #recipient_form").serialize())
+        .success((response) => {
+            new PNotify({
+                title: 'Email Sent',
+                text: 'Test template sent successfully',
+                type: 'success',
+                styling: 'bootstrap3'
+            });
+            $("#modal_flash").hide();
+            $("#template_test_modal").modal('hide');
+        })
+    e.preventDefault()
 }
 
 /**
@@ -104,6 +128,10 @@ $(document).ready(function () {
     });
 
     $('#new_template_btn').click(() => { edit(-1) });
+    $("#send_test_template_btn").click(() => {
+        $("#template_test_modal").modal('show');
+    })
+    $("#recipient_form").submit(sendTestTemplate)
 
     $("#templates-datatable").DataTable({
         order: [[1, "desc"]],
@@ -115,5 +143,14 @@ $(document).ready(function () {
                 "targets": 2
             }
         ]
+    });
+    // Helper function for multiple modals
+    // Source: https://stackoverflow.com/questions/19305821/multiple-modals-overlay
+    $(document).on('show.bs.modal', '.modal', function () {
+        let zIndex = 1040 + (10 * $('.modal:visible').length);
+        $(this).css('z-index', zIndex);
+        setTimeout(() => {
+            $('.modal-backdrop').last().not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+        }, 0);
     });
 })
