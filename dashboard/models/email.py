@@ -290,6 +290,27 @@ class EmailReport(ndb.Model):
         """
         return base_query.filter(cls.status == "Malicious").count()
 
+    @classmethod
+    def make_sample(cls):
+        ''' Returns a sample report for use in testing functions. '''
+        return cls(
+            report_type='123456_report_type',
+            thread_id='1_thread_id',
+            history_id='1_history_id',
+            date_received=datetime.datetime.now(),
+            date_reported=datetime.datetime.now(),
+            has_responded=False,
+            status='Pending',
+            headers=[Header(name="X-Test", value="isthislegit-test")],
+            sender=EmailAddress(
+                name="John Doe", address="johndoe@example.com"),
+            reported_by="johndoe@example.com",
+            reported_domain="example.com",
+            to=[EmailAddress(name="John Doe", address="johndoe@example.com")],
+            subject="Report Test",
+            html="<html><body>Report HTML</body></html>",
+            text="Report Text")
+
 
 class Stats(object):
     """

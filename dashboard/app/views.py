@@ -1,14 +1,15 @@
 import os
 
-from flask import Blueprint, render_template, request, url_for, redirect, jsonify, g, abort
+from flask import Blueprint, render_template, render_template_string, request, url_for, redirect, jsonify, g, abort
 from google.appengine.api import users
 from flanker.addresslib import address
 
 from models.email import (EmailReport, Stats, ReporterCount)
 from models.template import Template
 from models.rule import Rule
-from forms import TemplateForm, SearchForm
+from forms import TemplateForm, SearchForm, SendTestTemplateForm
 from services.search import search_provider
+from services.email import email_provider
 
 app_blueprint = Blueprint('app_blueprint', __name__)
 
@@ -116,6 +117,28 @@ def edit_template(template_id):
         template.sender = g.user.email()
         template.put()
         return jsonify(template.to_dict())
+    return json_error(400, list_errors(form), {})
+
+
+@app_blueprint.route('/templates/send_test', methods=['POST'])
+def send_test_template():
+    '''
+    Sends a test template to the provided address
+    '''
+    form = SendTestTemplateForm(request.form)
+    if form.validate_on_submit():
+        report = EmailReport.make_sample()
+        try:
+            subject = render_template_string(form.subject.data, report=report)
+            text = render_template_string(form.text.data, report=report)
+            email_provider.send(
+                to=form.recipient.data,
+                sender=g.user.email(),
+                subject=subject,
+                body=text)
+            return jsonify({'success': True, 'message': 'Sent test email.'})
+        except Exception as e:
+            return json_error(400, str(e), {})
     return json_error(400, list_errors(form), {})
 
 
