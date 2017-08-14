@@ -1,4 +1,8 @@
 {
+    "reportTitle": {
+        "message": "Report Phishing",
+        "description": "Title of button used to report the email"
+    },
     "confirmTitle": {
         "message": "Report Phishing Attempt",
         "description": "Title of modal used to confirm the user wishes to report the email"
@@ -6,6 +10,10 @@
     "confirmMessage": {
         "message": "Are you sure you want to report this email as phishing?",
         "description": "Message placed in modal content used to confirm the user wishes to report the email"
+    },
+    "confirmNote": {
+        "message": "Note:",
+        "description": "Message placed in modal content used to prompt user for an optional note"
     },
     "confirmPrimaryButton": {
         "message": "Send Report",
@@ -16,8 +24,8 @@
         "description": "Text for the button that cancels the report phish action"
     },
     "forwardReportBody": {
-        "message": "Possible phishing email reported. You can find the email attached.",
-        "description": "If the extension is configured to forward reports to an address, this is the body of the email sent. The report will be attached."
+        "message": "Possible phishing email reported. You can find the email attached. User note: ",
+        "description": "If the extension is configured to forward reports to an address, this is the body of the email sent. The report will be attached. A user specified note may follow."
     },
     "forwardReportSubject": {
         "message": "Possible Phish: ",

@@ -48,6 +48,7 @@ class IsThisLegitService {
         this.UpdateSettings = this.UpdateSettings.bind(this)
         this._Send_XHR = this._Send_XHR.bind(this)
         this.ForwardMessage = this.ForwardMessage.bind(this)
+        this.DispatchMessage = this.DispatchMessage.bind(this)
         this._API = this._API.bind(this)
 
         chrome.storage.managed.get(null, (items) => {
@@ -71,18 +72,36 @@ class IsThisLegitService {
     }
 
     /**
+     * Dispatch a message to the correct handler
+     * @param {object} payload - The JSON payload to process
+     * @param {MessageSender} sender - The source of this message
+     * @param {function} sendResponse - The response callback
+     */
+    DispatchMessage(payload, sender, sendResponse) {
+        switch(payload.action) {
+        case 'report':
+            return this.SendReport(payload, sender, sendResponse)
+        default:
+            console.warn('Invalid action', payload.action)
+        }
+    }
+
+    /**
      * Sends a report according to the configured settings
      * @param {object} payload - The JSON payload to process
+     * @param {MessageSender} sender - The source of this message
+     * @param {function} sendResponse - The response callback
      */
-    SendReport(payload) {
+    SendReport(payload, sender, sendResponse) {
         let reporter = payload.reported_by
         let messageId = payload.message_id
+        let note = payload.note
         let processMessage = (message) => {
             if (this.settings.server) {
-                this.SendToDashboard(reporter, message)
+                this.SendToDashboard(reporter, note, message)
             }
             if (this.settings.forwardAddress) {
-                this.ForwardMessage(reporter, message, messageId)
+                this.ForwardMessage(reporter, note, message, messageId)
             }
             if (this.settings.deleteOnReport) {
                 this.TrashMessage(messageId)
@@ -94,12 +113,14 @@ class IsThisLegitService {
     /**
      * Sends a message to the IsThisLegit dashboard
      * @param {string} reporter - The email address of the current user
+     * @param {string} note - The note left by the current user
      * @param {string} message - The message contents to send to the dashboard
      */
-    SendToDashboard(reporter, message) {
+    SendToDashboard(reporter, note, message) {
         let report = {
             'reported_by': reporter,
-            'report': message
+            'note': note,
+            'report': message,
         }
         this._Send_XHR(
             'POST',
@@ -113,16 +134,18 @@ class IsThisLegitService {
      * Forwards a message to the configured address by creating a template email
      * attaching a text file with the original email.
      * @param {string} reporter - The email address of the current user
+     * @param {string} note - The note left by the current user
      * @param {string} message - The message contents to forward
-     * @param {string} messageId - The message Id 
+     * @param {string} messageId - The message Id
      */
-    ForwardMessage(reporter, message, messageId) {
+    ForwardMessage(reporter, note, message, messageId) {
         let parsed = Mime.toMimeObj(message)
         let encodedMessage = Base64.encode(message)
+        note = note || '-None-'
         let emailObject = {
             to: this.settings.forwardAddress,
             from: reporter,
-            body: chrome.i18n.getMessage("forwardReportBody"),
+            body: chrome.i18n.getMessage("forwardReportBody") + note,
             subject: chrome.i18n.getMessage("forwardReportSubject") + parsed.subject,
             attaches: [{
                 type: "text/plain",
@@ -186,7 +209,7 @@ class IsThisLegitService {
         xhr.open(method, url)
         for (let header in headers) {
             if (headers.hasOwnProperty(header)) {
-                xhr.setRequestHeader(header, headers[header]);
+                xhr.setRequestHeader(header, headers[header])
             }
         }
         xhr.onload = requestComplete
@@ -226,19 +249,19 @@ class IsThisLegitService {
                         console.log("Retrying due to identity api bug.")
                         retry = false
                         getToken()
-                        return;
+                        return
                     }
                     console.log("Received persistent error: ")
                     console.log(chrome.runtime.lastError)
                     return
                 }
-                access_token = token;
+                access_token = token
                 this._Send_XHR(method, API_URL + path, data,
                     {
                         "Authorization": "Bearer " + access_token,
                         "Content-Type": "application/json; charset=UTF-8"
                     },
-                    onRequestComplete);
+                    onRequestComplete)
             })
         }
         let onRequestComplete = (error, status, response) => {
@@ -254,11 +277,8 @@ class IsThisLegitService {
 
 }
 
-const IsThisLegitSvc = new IsThisLegitService();
+const IsThisLegitSvc = new IsThisLegitService()
 
 /* Setup our event listeners */
 chrome.storage.onChanged.addListener(IsThisLegitSvc.UpdateSettings)
-
-chrome.runtime.onMessage.addListener((message) => {
-    IsThisLegitSvc.SendReport(message)
-});
+chrome.runtime.onMessage.addListener(IsThisLegitSvc.DispatchMessage)
