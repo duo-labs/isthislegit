@@ -18,7 +18,8 @@
                 "dist/js/app.js"
             ],
             "matches": [
-                "https://mail.google.com/*"
+                "https://mail.google.com/*",
+                "https://inbox.google.com/*"
             ]
         }
     ],
@@ -29,6 +30,9 @@
         "16": "icons/icon16.png",
         "48": "icons/icon48.png"
     },
+    "web_accessible_resources": [
+        "dist/img/*.png"
+    ],
     "manifest_version": 2,
     "name": "IsThisLegit",
     "version": "0.1.0",

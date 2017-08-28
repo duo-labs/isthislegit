@@ -39,6 +39,16 @@ import $ from "jquery"
 
 const APP_ID = 'sdk_isthislegit_05b10877a3'
 
+/**
+ * Extracts the domain from an email address
+ * @param {string} emailAddress - The email address
+ * @return {string[]} The email local-part and domain
+ */
+function getEmailParts(emailAddress) {
+    let idx = emailAddress.lastIndexOf('@');
+    return [emailAddress.substr(0, idx), emailAddress.substr(idx + 1)]
+}
+
 /* Class representing a generic button to be added to the Inbox toolbar */
 class ReportPhishButton {
     /**
@@ -47,8 +57,10 @@ class ReportPhishButton {
      */
     constructor(sdk) {
         this.sdk = sdk
-        this.iconClass = "icon"
+        this.title = chrome.i18n.getMessage('reportTitle')
+        this.iconUrl = chrome.extension.getURL('dist/img/hook.png')
         this.section = this.sdk.Toolbars.SectionNames.INBOX_STATE
+        this.content = this.generateModalContent()
 
         this.onClick = this.onClick.bind(this)
     }
@@ -58,9 +70,21 @@ class ReportPhishButton {
      * @return {html.Element} The HTML element to use in the modal
      */
     get modalContent() {
-        let modalElement = $("<span/>")
-        modalElement.text(chrome.i18n.getMessage("confirmMessage"))
-        return modalElement[0]
+        return this.content
+    }
+
+    generateModalContent() {
+        let modalElement = document.createElement('div')
+        let p1 = document.createElement('p')
+        p1.innerText = chrome.i18n.getMessage("confirmMessage")
+        let p2 = document.createElement('p')
+        p2.innerText = chrome.i18n.getMessage("confirmNote")
+        let t = document.createElement('textarea')
+        t.classList.add('itl-report-textarea')
+        modalElement.appendChild(p1)
+        modalElement.appendChild(p2)
+        modalElement.appendChild(t)
+        return modalElement
     }
 
     /**
@@ -68,6 +92,9 @@ class ReportPhishButton {
      * @param {event} e - The event context
      */
     onClick(e) {
+        let textarea = this.modalContent.getElementsByClassName('itl-report-textarea')[0]
+        textarea.value = ''
+
         let modal = this.sdk.Widgets.showModalView({
             el: this.modalContent,
             title: chrome.i18n.getMessage("confirmTitle"),
@@ -76,9 +103,9 @@ class ReportPhishButton {
                     text: chrome.i18n.getMessage("confirmPrimaryButton"),
                     type: "PRIMARY_ACTION",
                     onClick: () => {
-                        this.SendReport(e)
+                        this.SendReport(e, textarea.value)
                         modal.close()
-                        this.sdk.Router.goto(this.sdk.Router.NativeRouteIDs.INBOX);
+                        this.sdk.Router.goto(this.sdk.Router.NativeRouteIDs.INBOX)
                         this.ShowNotification()
                     }
                 },
@@ -102,11 +129,14 @@ class ReportPhishButton {
     /**
      * Sends a report to our event page for processing
      * @param {string} thread_id - The thread_id to report to the IsThisLegit dashboard
+     * @param {string} note - A user message on the report
      */
-    SendReportToBackground(thread_id) {
+    SendReportToBackground(thread_id, note) {
         chrome.runtime.sendMessage({
+            "action": "report",
             "reported_by": this.sdk.User.getEmailAddress(),
-            "message_id": thread_id
+            "message_id": thread_id,
+            "note": note,
         })
     }
 
@@ -135,11 +165,12 @@ class ListReportPhishButton extends ReportPhishButton {
      * Sends a report to the IsThisLegit dashboard for every thread
      * currently selected by the user.
      * @param {event} e - The event context (contains a list of selected threads)
+     * @param {string} note - A user message on the report
      */
-    SendReport(event) {
+    SendReport(event, note) {
         $.each(event.selectedThreadRowViews, (i, view) => {
             view.getThreadIDAsync().then((thread_id) => {
-                this.SendReportToBackground(thread_id)
+                this.SendReportToBackground(thread_id, note)
             })
         })
     }
@@ -160,17 +191,18 @@ class ThreadReportPhishButton extends ReportPhishButton {
      * Sends a report to the IsThisLegit dashboard for every thread
      * currently selected by the user.
      * @param {event} e - The event context (contains a single thread)
+     * @param {string} note - A user message on the report
      */
-    SendReport(event) {
+    SendReport(event, note) {
         event.threadView.getThreadIDAsync().then((thread_id) => {
-            this.SendReportToBackground(thread_id)
+            this.SendReportToBackground(thread_id, note)
         })
     }
 }
 
-InboxSDK.load('1.0', APP_ID).then((sdk) => {
+InboxSDK.load('2.0', APP_ID).then((sdk) => {
     let emailAddress = sdk.User.getEmailAddress()
-    let emailDomain = emailAddress.substring(emailAddress.lastIndexOf("@") + 1);
+    let [local_part, domain] = getEmailParts(emailAddress)
     let validDomains = []
     // We want to let administrators configure the email address domains they own, which
     // tells us when to show the button. We need to check if that setting is configured
@@ -179,7 +211,7 @@ InboxSDK.load('1.0', APP_ID).then((sdk) => {
         if (setting.domains) {
             validDomains = setting.domains
         }
-        if (validDomains.length && !validDomains.includes(emailDomain)) {
+        if (validDomains.length && !validDomains.includes(domain)) {
             return
         }
         renderButtons()
