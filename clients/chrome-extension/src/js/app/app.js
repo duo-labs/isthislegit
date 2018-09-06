@@ -168,7 +168,7 @@ class ThreadReportPhishButton extends ReportPhishButton {
     }
 }
 
-InboxSDK.load('1.0', APP_ID).then((sdk) => {
+InboxSDK.load(2, APP_ID).then((sdk) => {
     let emailAddress = sdk.User.getEmailAddress()
     let emailDomain = emailAddress.substring(emailAddress.lastIndexOf("@") + 1);
     let validDomains = []
@@ -185,7 +185,6 @@ InboxSDK.load('1.0', APP_ID).then((sdk) => {
         renderButtons()
     })
     let renderButtons = () => {
-        sdk.Toolbars.registerToolbarButtonForList(new ListReportPhishButton(sdk))
-        sdk.Toolbars.registerToolbarButtonForThreadView(new ThreadReportPhishButton(sdk))
+        sdk.Toolbars.registerThreadButton(new ListReportPhishButton(sdk))
     }
 });
