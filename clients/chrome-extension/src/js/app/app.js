@@ -168,7 +168,7 @@ class ThreadReportPhishButton extends ReportPhishButton {
     }
 }
 
-InboxSDK.load(2, APP_ID).then((sdk) => {
+InboxSDK.load(1, APP_ID).then((sdk) => {
     let emailAddress = sdk.User.getEmailAddress()
     let emailDomain = emailAddress.substring(emailAddress.lastIndexOf("@") + 1);
     let validDomains = []
