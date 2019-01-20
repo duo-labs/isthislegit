@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "devDependencies": {
     "babel-preset-es2015": "^6.18.0",
-    "gulp": "^3.9.1",
+    "gulp": "3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-cache": "^0.4.5",
     "gulp-concat": "^2.6.1",
@@ -17,11 +17,20 @@
     "gulp-print": "^2.0.1",
     "gulp-rename": "^1.2.2",
     "gulp-ruby-sass": "^2.1.1",
+    "gulp-sass": "^4.0.2",
     "gulp-strip-debug": "^1.1.0",
     "gulp-todo": "^5.1.0",
     "gulp-uglify": "^2.0.0",
     "jshint": "^2.9.4",
     "jshint-stylish": "^2.2.1",
-    "main-bower-files": "^2.13.1"
+    "node-sass": "^4.11.0"
+  },
+  "dependencies": {
+    "dompurify": "^1.0.9",
+    "gentelella": "^1.4.0",
+    "highcharts": "^7.0.2",
+    "pretty-checkbox": "^3.0.3",
+    "sweetalert2": "^8.0.1",
+    "underscore": "^1.9.1"
   }
 }
