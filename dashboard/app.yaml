@@ -29,6 +29,8 @@ libraries:
   version: latest
 - name: markupsafe
   version: latest
+- name: ssl
+  version: latest
 
 skip_files:
 - ^(.*/)?#.*#$
