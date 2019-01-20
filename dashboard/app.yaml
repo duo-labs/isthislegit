@@ -40,3 +40,5 @@ skip_files:
 - ^(.*/)?\..*$
 - ^node_modules/.*$
 - ^bower_components/.*$
+- Dockerfile
+- .dockerignore
