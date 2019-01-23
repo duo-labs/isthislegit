@@ -1,3 +1,5 @@
+# Installation
+
 IsThisLegit contains two parts: the client and the dashboard. These install docs will help you get up and running with both parts of IsThisLegit.
 
 > Note: You don't have to install the IsThisLegit dashboard to use the extension. You can simply setup the extension to forward emails to a predefined inbox if you don't want to setup the dashboard.
@@ -5,8 +7,6 @@ IsThisLegit contains two parts: the client and the dashboard. These install docs
 <p align="center">
 <img src="https://i.imgur.com/imUNYn9.png" width="400">
 </p>
-
-# Installation
 
 ## Cloning the Repo
 
