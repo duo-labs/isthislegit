@@ -49,8 +49,10 @@ class ReportPhishButton {
         this.sdk = sdk
         this.iconClass = "icon"
         this.section = this.sdk.Toolbars.SectionNames.INBOX_STATE
-
+        this.positions = ["THREAD", "LIST"]
+        
         this.onClick = this.onClick.bind(this)
+        this.SendReport = this.SendReport.bind(this)
     }
 
     /**
@@ -95,8 +97,22 @@ class ReportPhishButton {
      * @throws {error} An error indicating the subclass hasn't sublcassed the
      * method
      */
-    SendReport() {
-        throw "Error not implemented"
+    SendReport(event) {
+        if (event.position === "THREAD") {
+            $.each(event.selectedThreadViews, (i, view) => {
+                view.getThreadIDAsync().then((thread_id) => {
+                    this.SendReportToBackground(thread_id)
+                })
+            })
+        } else if (event.position === "LIST") {
+            $.each(event.selectedThreadRowViews, (i, view) => {
+                view.getThreadIDAsync().then((thread_id) => {
+                    this.SendReportToBackground(thread_id)
+                })
+            })
+        } else {
+            throw "Error not implemented"
+        }
     }
 
     /**
@@ -120,55 +136,7 @@ class ReportPhishButton {
     }
 }
 
-
-/**
- * Class representing a button to use in the ListView of Gmail
- * @extends ReportPhishButton
- */
-class ListReportPhishButton extends ReportPhishButton {
-    constructor(sdk) {
-        super(sdk)
-        this.SendReport = this.SendReport.bind(this)
-    }
-
-    /**
-     * Sends a report to the IsThisLegit dashboard for every thread
-     * currently selected by the user.
-     * @param {event} e - The event context (contains a list of selected threads)
-     */
-    SendReport(event) {
-        $.each(event.selectedThreadRowViews, (i, view) => {
-            view.getThreadIDAsync().then((thread_id) => {
-                this.SendReportToBackground(thread_id)
-            })
-        })
-    }
-}
-
-
-/**
- * Class representing a button to use in the ThreadView of Gmail
- * @extends ReportPhishButton
- */
-class ThreadReportPhishButton extends ReportPhishButton {
-    constructor(sdk) {
-        super(sdk)
-        this.SendReport = this.SendReport.bind(this)
-    }
-
-    /**
-     * Sends a report to the IsThisLegit dashboard for every thread
-     * currently selected by the user.
-     * @param {event} e - The event context (contains a single thread)
-     */
-    SendReport(event) {
-        event.threadView.getThreadIDAsync().then((thread_id) => {
-            this.SendReportToBackground(thread_id)
-        })
-    }
-}
-
-InboxSDK.load('1.0', APP_ID).then((sdk) => {
+InboxSDK.load(1, APP_ID).then((sdk) => {
     let emailAddress = sdk.User.getEmailAddress()
     let emailDomain = emailAddress.substring(emailAddress.lastIndexOf("@") + 1);
     let validDomains = []
@@ -185,7 +153,6 @@ InboxSDK.load('1.0', APP_ID).then((sdk) => {
         renderButtons()
     })
     let renderButtons = () => {
-        sdk.Toolbars.registerToolbarButtonForList(new ListReportPhishButton(sdk))
-        sdk.Toolbars.registerToolbarButtonForThreadView(new ThreadReportPhishButton(sdk))
+        sdk.Toolbars.registerThreadButton(new ReportPhishButton(sdk))
     }
 });
