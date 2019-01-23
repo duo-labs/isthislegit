@@ -6,7 +6,7 @@ IsThisLegit is a dashboard and Chrome extension that makes it easy to receive, a
 
 ### Documentation
 
-Documentation can be found on our [wiki](https://github.com/duo-labs/isthislegit/wiki). Find something missing? Let us know by filing an issue!
+Documentation can be found in the [docs folder](https://github.com/duo-labs/isthislegit/tree/master/docs). Find something missing? Let us know by filing an issue!
 
 ### Issues
 
