@@ -90,6 +90,8 @@ Once you have your account setup, click the "Add New Item" button. Here, you can
 
 Once this is uploaded, fill out the self-explanatory details for the application (you don't have to fill out everything). A key thing to note is to select "Private > Everyone at [yourdomain].com" under the "Visibility Options". This restricts the extension to only be installed by people in your GSuite organization.
 
+> **Note**: If you don't see this option available, you may need to [set your Chrome Webstore permissions](https://support.google.com/chrome/a/answer/2663860?hl=en) within G Suite.
+
 ![](http://i.imgur.com/MrPRh9e.png)
 
 Once the extension is published, you'll be taken to the webstore page for your extension. In the URL, you'll see the 32 character extension ID. We'll want to copy that down for later.
