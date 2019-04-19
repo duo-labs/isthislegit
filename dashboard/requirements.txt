@@ -39,7 +39,7 @@ rsa==4.0
 six==1.12.0
 toml==0.10.0
 uritemplate==3.0.0
-urllib3==1.24.1
+urllib3>=1.24.2
 WebOb==1.8.4
 Werkzeug==0.14.1
 WTForms==2.2.1
