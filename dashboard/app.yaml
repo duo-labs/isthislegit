@@ -18,7 +18,7 @@ handlers:
   login: admin
   secure: always
 
-- url: "/report/"
+- url: "/report/?"
   script: isthislegit.app
   secure: always
 

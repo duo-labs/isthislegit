@@ -9,12 +9,13 @@ from extensions import csrf_protect, crossdomain
 from services.email import email_provider
 from services.worker import worker_provider
 
-report_blueprint = Blueprint(
-    'report_blueprint', __name__, url_prefix='/report')
+report_blueprint = Blueprint('report_blueprint', __name__)
 
 
 @csrf_protect.exempt
-@report_blueprint.route('/', methods=['POST', 'OPTIONS'])
+@report_blueprint.route('/report/',
+                        strict_slashes=False,
+                        methods=['POST', 'OPTIONS'])
 @crossdomain(origin='*', headers=['Content-Type'])
 def report():
     ''' Receives a report in JSON format '''
