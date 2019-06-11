@@ -42,8 +42,8 @@ from idna import IDNAError
 from ply.lex import LexError
 from ply.yacc import YaccError
 
-from flanker.addresslib.lexer import lexer
-from flanker.addresslib.parser import (Mailbox, Url, mailbox_parser,
+from flanker.addresslib._parser.lexer import lexer
+from flanker.addresslib._parser.parser import (Mailbox, Url, mailbox_parser,
                                        mailbox_or_url_parser,
                                        mailbox_or_url_list_parser,
                                        addr_spec_parser, url_parser)

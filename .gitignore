@@ -66,3 +66,6 @@ isthislegit-extension.zip
 # Any dev manifest files
 manifest-dev.json
 manifest-prod.json
+
+# Any offline developer data
+data/

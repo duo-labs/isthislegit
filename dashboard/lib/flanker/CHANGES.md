@@ -4,3 +4,5 @@ The following changes were made:
 
 * All occurrences of the `regex` library were replaced by the standard `re` library to make the library compatible with Google App Engine.
 * The reliance on `cchardet` have been removed and replaced by `chardet`.
+* Added `debug=False` to all instantiations of the `yacc.yacc` parser to support read-only filesystems
+* Added `write_tables=False` to all instantiations of the `yacc.yacc` parser to support read-only filesystems
