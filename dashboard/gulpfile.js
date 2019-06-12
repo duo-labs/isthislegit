@@ -99,9 +99,11 @@ gulp.task('vendor-fonts', function () {
 
 // Process and minimize SASS -> CSS
 gulp.task('sass', function () {
-    return plugins.sass('static/src/scss/custom.scss', {
-            style: 'compressed'
-        })
+    return gulp.src('static/src/scss/custom.scss')
+        .pipe(plugins.sass({
+            outputStyle: 'compressed'
+        }))
+        .on('error', plugins.sass.logError)
         .pipe(plugins.rename({
             suffix: '.min'
         }))
