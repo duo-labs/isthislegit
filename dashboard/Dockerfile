@@ -28,9 +28,9 @@ USER isthislegit
 WORKDIR /srv/isthislegit
 
 # Copy and install the dependencies
-COPY package.json .
-COPY yarn.lock .
-RUN  yarn install --dev 
+COPY --chown=isthislegit:isthislegit package.json .
+COPY --chown=isthislegit:isthislegit yarn.lock .
+RUN  yarn install --dev
 
 COPY --chown=isthislegit:isthislegit requirements.txt .
 RUN pip install -t lib -r requirements.txt
@@ -40,6 +40,7 @@ COPY --chown=isthislegit:isthislegit . /srv/isthislegit
 RUN yarn run gulp
 
 # Setup and execute the dev GAE server
+ENV CLOUDSDK_PYTHON=python2.7
 EXPOSE 8080/tcp
 ENTRYPOINT ["dev_appserver.py"]
 CMD ["--host", "0.0.0.0", \

@@ -46,7 +46,7 @@ gulp.task('vendor-js', function () {
             './node_modules/gentelella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js',
             './node_modules/gentelella/vendors/select2/dist/js/select2.full.min.js',
             './node_modules/highcharts/highcharts.js',
-            './node_modules/sweetalert2/sweetalert2.min.js',
+            './node_modules/sweetalert2/dist/sweetalert2.min.js',
             './node_modules/underscore/underscore-min.js'
         ])
         .pipe(filterJS)
@@ -132,4 +132,4 @@ gulp.task('watch', function () {
 });
 
 // Default
-gulp.task('default', ['lint', 'vendor-js', 'vendor-css', 'vendor-fonts', 'fonts', 'scripts', 'sass', 'images']);
+exports.default = gulp.series(['lint', 'vendor-js', 'vendor-css', 'vendor-fonts', 'fonts', 'scripts', 'sass', 'images']);
