@@ -7,7 +7,7 @@ var webpack = require('webpack')
 var WEBPACK_CONFIG = require('./webpack.config');
 
 gulp.task('webpack', function (callback) {
-    webpack(WEBPACK_CONFIG, function (err, stats) {
+    return webpack(WEBPACK_CONFIG, function (err, stats) {
         if (err) {
             throw new gutil.PluginError('webpack', err);
         }
@@ -17,13 +17,13 @@ gulp.task('webpack', function (callback) {
 });
 
 gulp.task('styles', function () {
-    gulp.src('src/css/*.css')
+    return gulp.src('src/css/*.css')
         .pipe(uglifycss())
         .pipe(gulp.dest('dist/css/'))
 })
 
 gulp.task('release', function () {
-    gulp.src([
+    return gulp.src([
         'dist/**',
         'manifest.json',
         'icons/**',
@@ -34,5 +34,5 @@ gulp.task('release', function () {
         .pipe(gulp.dest('.'))
 })
 
-gulp.task('build', ['webpack', 'styles'])
-gulp.task('default', ['build'])
+gulp.task('build', gulp.series(['webpack', 'styles']))
+exports.default = gulp.series(['build'])
