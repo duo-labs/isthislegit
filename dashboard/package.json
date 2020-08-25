@@ -28,7 +28,7 @@
   "dependencies": {
     "dompurify": "^1.0.9",
     "gentelella": "^1.4.0",
-    "highcharts": "^7.0.2",
+    "highcharts": "^7.2.2",
     "pretty-checkbox": "^3.0.3",
     "sweetalert2": "^8.0.1",
     "underscore": "^1.9.1"
