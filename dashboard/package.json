@@ -26,7 +26,7 @@
     "node-sass": "^4.11.0"
   },
   "dependencies": {
-    "dompurify": "^1.0.9",
+    "dompurify": "^2.0.7",
     "gentelella": "^1.4.0",
     "highcharts": "^7.2.2",
     "pretty-checkbox": "^3.0.3",
