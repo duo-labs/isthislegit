@@ -35,7 +35,7 @@ redis==3.0.1
 regex==2018.11.22
 requests==2.21.0
 requests-toolbelt==0.8.0
-rsa==4.0
+rsa==4.1
 six==1.12.0
 toml==0.10.0
 uritemplate==3.0.0
