@@ -31,6 +31,6 @@
     "highcharts": "^7.2.2",
     "pretty-checkbox": "^3.0.3",
     "sweetalert2": "^8.0.1",
-    "underscore": "^1.9.1"
+    "underscore": "^1.12.1"
   }
 }
