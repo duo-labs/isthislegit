@@ -23,7 +23,7 @@
     "gulp-uglify": "^2.0.0",
     "jshint": "^2.9.4",
     "jshint-stylish": "^2.2.1",
-    "node-sass": "^4.11.0"
+    "node-sass": "^7.0.0"
   },
   "dependencies": {
     "dompurify": "^1.0.9",
