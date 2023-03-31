@@ -31,7 +31,7 @@ pyasn1==0.4.4
 pyasn1-modules==0.2.2
 pycparser==2.19
 pyparsing==2.3.0
-redis==3.0.1
+redis==4.4.4
 regex==2018.11.22
 requests==2.21.0
 requests-toolbelt==0.8.0
